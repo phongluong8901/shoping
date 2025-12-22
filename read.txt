@@ -1,0 +1,41 @@
+// tao url local nhưng public tam cho flutter
+Chạy FastAPI của bạn ở cổng 8000 trước.
+
+Mở một Terminal mới và gõ:
+
+Bash
+
+npx localtunnel --port 8000
+Nó sẽ trả về một cái link dạng: https://xxxx-xxxx-xxxx.loca.lt
+
+Copy link đó dán vào code Flutter là xong.
+
+
+// dung postgress cho render web + docker
+tai postgress tren web
+tai DBever lam studio theo doi
+
+pip install psycopg2-binary
+
+//them docker
+docker build -t fastapi-app .
+
+docker run -d --name my-api -p 8000:10000 --env-file .env shopping-app
+
+
+//
+docker rm -f my-api  # Xóa cái cũ bị lỗi đi
+
+
+// day len github
+git config --global user.email "phongluong3366@gmail.com"
+git config --global user.name "phongluong8901"
+
+# 1. Thêm tất cả các file (quan trọng nhất là dấu chấm)
+git add .
+
+# 2. Commit lại (lúc này Git đã biết bạn là ai nên sẽ không lỗi nữa)
+git commit -m "Full code for FastAPI and Docker"
+
+# 3. Đẩy lên GitHub
+git push -u origin main
