@@ -13,4 +13,4 @@ COPY . .
 
 # Chạy app với Uvicorn
 # Render sẽ tự cấp PORT qua biến môi trường, nên dùng $PORT
-CMD uvicorn fastApi_api:app --host 0.0.0.0 --port ${PORT:-10000}
+CMD ["uvicorn", "fastApi_api:app", "--host", "0.0.0.0", "--port", "8000"]

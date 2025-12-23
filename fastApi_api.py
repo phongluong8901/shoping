@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from sqlalchemy import create_engine, Column, Integer, String, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
+import router_llm
 
 # --- 1. CẤU HÌNH KẾT NỐI ---
 # Nếu chạy trên Render, lấy URL từ biến môi trường "DATABASE_URL"
@@ -17,9 +18,10 @@ if not DATABASE_URL:
     DB_USER = "postgres"
     DB_PASS = urllib.parse.quote_plus("Condien123@")
     DB_HOST = "localhost"
+    db_host_env = os.getenv("DB_HOST", "localhost")
     DB_PORT = "5432"
     DB_NAME = "shopping_db"
-    DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASS}@{db_host_env}:{DB_PORT}/{DB_NAME}"
 
 # Render thường trả về URL bắt đầu bằng postgres://, 
 # nhưng SQLAlchemy yêu cầu postgresql:// (có thêm 'ql')
@@ -64,13 +66,18 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=True,        # THÊM DÒNG NÀY: Cho phép gửi kèm headers/cookies (danh cho ngrok)
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 class ShoppingItemSchema(BaseModel):
     name: str
     price: float
+
+# Đăng ký router
+app.include_router(router_llm.router, prefix="/ai", tags=["LLM"])
 
 def get_db():
     db = SessionLocal()
